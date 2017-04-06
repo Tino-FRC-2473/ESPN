@@ -1,11 +1,147 @@
-<html>
-<head>
-  <!--  ORIGINAL SCRIPT -->
-  <!-- <script type="text/javascript" src="api-thebluealliance.js"></script> -->
-  <!--  MODIFIED SCRIPT-->
-  <script type="text/javascript" src="script.js"></script>
+<!DOCTYPE html>
 
+<html>
+
+<head>
+	<title>2473 Scouting Test</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="data.js"></script>
+	<script>
+
+		var eventId = "2017casj"
+		var teamId = "frc2473";
+
+		requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
+		requestTeamsAtTourn(eventId, handleTeams);
+
+		function handleTeams(arr) {
+			var teams = [];
+
+			for(var i = 0; i < arr.length; i++) {
+				teams.push(arr[i].team_number);
+			}
+
+			console.log(teams);
+			step1(teams);
+		}
+
+		function handleTeamMatchData(arr) {
+			console.log(arr);	
+			var qmMatches = [];
+			for(var i = 0; i < arr.length; i++) {
+				var match = arr[i];
+				if(match.comp_level == "qm") {
+					qmMatches.push(parseMatchData(match, teamId));
+				}
+			}
+			qmMatches.sort(function compare(a, b) {
+				return a.match_number - b.match_number;
+			});
+
+			var qfMatches = [];
+			for(var i = 0; i < arr.length; i++) {
+				var match = arr[i];
+				if(match.comp_level == "qf") {
+					qfMatches.push(parseMatchData(match, teamId));
+				}
+			}
+			qfMatches.sort(function compare(a, b) {
+				return a.match_number - b.match_number;
+			});
+
+			var sfMatches = [];
+			for(var i = 0; i < arr.length; i++) {
+				var match = arr[i];
+				if(match.comp_level == "sf") {
+					sfMatches.push(parseMatchData(match, teamId));
+				}
+			}
+			sfMatches.sort(function compare(a, b) {
+				return a.match_number - b.match_number;
+			});
+
+			var fMatches = [];
+			for(var i = 0; i < arr.length; i++) {
+				var match = arr[i];
+				if(match.comp_level == "f") {
+					fMatches.push(parseMatchData(match, teamId));
+				}
+			}
+			fMatches.sort(function compare(a, b) {
+				return a.match_number - b.match_number;
+			});
+
+			var matches = [];
+			while(qmMatches.length > 0) {
+				matches.push(qmMatches.shift());
+			}
+			while(qfMatches.length > 0) {
+				matches.push(qfMatches.shift());
+			}
+			while(sfMatches.length > 0) {
+				matches.push(sfMatches.shift());
+			}
+			while(fMatches.length > 0) {
+				matches.push(fMatches.shift());
+			}
+
+			console.log(matches);
+		}
+
+		function parseMatchData(obj, team) {
+			var toReturn = {};
+
+			var side;
+			var oSide;
+			for(var i = 0; i < 3; i++) {
+				if(team == obj.alliances.blue.teams[i]) {
+					side = "blue";
+					oSide = "red";
+				} else if(team == obj.alliances.red.teams[i]) {
+					side = "red";
+					oSide = "blue";
+				}
+			}
+
+
+			toReturn.match_number = obj.match_number;
+			toReturn.result = (toReturn.score > obj.alliances[oSide].score)
+									? "W"
+									: (toReturn.score < obj.alliances[oSide].score)
+											? "L"
+											: "T";
+			toReturn.score = obj.alliances[side].score;
+			
+			toReturn.scores = {};
+				toReturn.scores.kpa = obj.score_breakdown[side].autoFuelPoints + obj.score_breakdown[side].teleopFuelPoints;
+				toReturn.scores.touchpad = obj.score_breakdown[side].teleopTakeoffPoints;
+				toReturn.scores.rotor = obj.score_breakdown[side].autoRotorPoints + obj.score_breakdown[side].teleopRotorPoints;
+				toReturn.scores.rotors = {};
+					toReturn.scores.rotors.teleop = obj.score_breakdown[side].teleopRotorPoints;
+					toReturn.scores.rotors.auto = obj.score_breakdown[side].autoRotorPoints;
+				toReturn.scores.mobility = ((obj.score_breakdown[side].robot1Auto == "Mobility")?5:0) +
+										((obj.score_breakdown[side].robot2Auto == "Mobility")?5:0) +
+										((obj.score_breakdown[side].robot3Auto == "Mobility")?5:0);
+				toReturn.scores.fouls = obj.score_breakdown[side].foulPoints;
+				toReturn.scores.adjustments = obj.score_breakdown[side].adjustPoints;
+			toReturn.numRotors = obj.score_breakdown[side].rotor1Engaged + obj.score_breakdown[side].rotor2Engaged + obj.score_breakdown[side].rotor3Engaged + obj.score_breakdown[side].rotor4Engaged;
+
+			return toReturn;
+		}
+
+		function step1(teams) {
+
+		}
+
+		function print(param) {
+			console.log(param);
+		}
+	</script>
 </head>
+
 <body>
+
+
 </body>
+
 </html>

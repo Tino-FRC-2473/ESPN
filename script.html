@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+<script>
+
+var teams = getTeams();
+
+execute();
+
+function execute() {
+	var allData = getAllTeamData();
+	var sortBy = "W";
+	console.log("sorted by " + sortBy);
+	console.log(sortByStatType(allData, sortBy, false));
+
+	console.log("");
+	console.log("actual data sorted by Auto");
+	var query = {
+	    url: 'https://www.thebluealliance.com/event/2017cada#rankings',
+	    type: 'html',
+	    selector: '#rankingsTable tbody tr',
+	    extract: 'text'
+  	},
+  	uriQuery = encodeURIComponent(JSON.stringify(query)),
+  	request  = 'http://example.noodlejs.com/?q=' +
+    			uriQuery + '&callback=?';
+
+	// Make Ajax request to Noodle server
+	jQuery.getJSON(request, function (data) {
+		var resultsData = [];
+
+		for(var i = 0; i < data[0].results.length; i++) {
+			resultsData.push(getResultData(data[0].results[i]));
+		}
+
+		console.log(sortByStatType(resultsData, "Auto", true));		
+	});
+}
+
+function getResultData(str) {
+	var arr = [];
+	var entry = "";
+
+	for(var i = 0; i < str.length; i++) {
+		if(str.charAt(i) == " ") {
+			if(entry.length > 0) {
+				if(hasTwoDashes(entry)) {
+					var a = entry.indexOf("-");
+					var b = a+1 + entry.substring(a+1).indexOf("-");
+					arr.push(entry.substring(0, a));
+					arr.push(entry.substring(a+1, b));
+					arr.push(entry.substring(b+1));
+				} else {
+					arr.push(entry);
+				}
+				entry = "";
+			}
+		} else {
+			entry += str.charAt(i);
+		}
+	}
+
+	if(entry.length > 0) {
+		arr.push(entry);
+	}
+
+	var obj = {};
+
+	obj.rank = parseFloat(arr[0]);
+	obj.team = parseFloat(arr[1]);
+	obj.rankingScore = parseFloat(arr[2]);
+	obj.matchPts = parseFloat(arr[3]);
+	obj.auto = parseFloat(arr[4]);
+	obj.rotor = parseFloat(arr[5]);
+	obj.touchpad = parseFloat(arr[6]);
+	obj.pressure = parseFloat(arr[7]);
+	obj.w = parseFloat(arr[8]);
+	obj.l = parseFloat(arr[9]);
+	obj.t = parseFloat(arr[10]);
+	obj.dq = parseFloat(arr[11]);
+	obj.games = parseFloat(arr[12]);
+	obj.rp = parseFloat(arr[13]);
+
+	return obj;
+}
+
+function hasTwoDashes(str) {
+	var n = 0;
+
+	for(var i = 0; i < str.length; i++) {
+		if(str.charAt(i) == "-")
+			n++;
+	}
+
+	return n == 2;
+}
+
+function sortByStatType(teamsArr, str, isDescending) {
+	return teamsArr.sort(
+		function compare(a, b) {
+			return ((isDescending)?-1:1) * (a[statTypeToCamelCase(str)] - b[statTypeToCamelCase(str)]);
+		}
+	);
+}
+
+//get all titles of top bar to return
+function getStatTypes() {
+	return ["Rank", "Team", "Ranking Score", "Match Pts", "Auto", "Rotor", "Touchpad", "Pressure", "W", "L", "T", "DQ", "Games", "RP"];
+}
+
+function statTypeToCamelCase(str) {
+	var toReturn = "";
+
+	for(var i = 0; i < str.length; i++) {
+		if(!(str.charAt(i) == ' ') && (i == 0 || !(str.charAt(i-1) == ' '))) {
+			toReturn += str.charAt(i).toLowerCase();
+		} else if(!(str.charAt(i) == ' ')) {
+			toReturn += str.charAt(i);
+		}
+	}
+
+	return toReturn;
+}
+
+function getCamelStatTypes() {
+	var statTypes = getStatTypes();
+
+	var camelStatTypes = [];
+	for(var i = 0; i < statTypes.length; i++) {
+		camelStatTypes.push(statTypeToCamelCase(statTypes[i]));
+	}
+
+	return camelStatTypes;
+}
+
+function getAllTeamData() {
+	var arr = [];
+	for(var i = 0 ; i < 5; i++) {
+		arr.push(getRandomObject());
+	}
+	return arr;
+}
+
+function getRandomObject() {
+	var obj = {};
+
+	obj.rank = getRandomInt(1,61);
+	obj.team = getRandomInt(1,3000);
+	obj.rankingScore = getRandomInt(0,30);
+	obj.matchPts = getRandomInt(0,500);
+	obj.auto = getRandomInt(0,250);
+	obj.rotor = getRandomInt(0,2500);
+	obj.touchpad = getRandomInt(0,1000);
+	obj.pressure = getRandomInt(0,500);
+	obj.w = getRandomInt(0,8);
+	obj.l = getRandomInt(0,8);
+	obj.t = getRandomInt(0,1);
+	obj.dq = getRandomInt(0,1);
+	obj.games = getRandomInt(8,9);
+	obj.rp = getRandomInt(0,24);
+
+	return obj;
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+/*function possibleSearchOptionsFor(sBar) {
+	var rankByStat = [];
+	var smartRankByStat = [];
+	var teamStat = [];
+	var teamNum = [];
+
+	if(sBar.length > 0) {
+		var nums = getNumsIn(sBar).split(" ");
+		nums.sort(function(a, b) {
+			return b.length - a.length;
+		});
+		console.log("  " + "nums in search: " + nums);
+
+		for(var i = 0; i < nums.length; i++) {
+			pushTeamOnlyOptions(teamNum, nums);
+		}
+
+
+		return [smartRankByStat, rankByStat, teamStat, teamNum];
+	} else {
+		return [];
+	}
+}
+
+function pushTeamOnlyOptions(arr, nums) {
+	var notCompleteMatches = [];
+	for(var n = 0; n < nums.length; n++) {
+		for(var t = 0; t < teams.length; t++) {
+			console.log(nums[n] + " " + teams[t]);
+			if(nums[n] == teams[t]) {
+				console.log("  dir: " + teams[t]);
+				arr.push(teams[t]);
+			} else if((""+teams[t]).includes(nums[n])) {
+				console.log("  indir: " + teams[t]);
+				notCompleteMatches.push(teams[t]);
+			}
+		}
+	}
+	console.log("");
+	console.log("arr: " + arr);
+	console.log("other: " + notCompleteMatches);
+	for(var k = 0; k < notCompleteMatches.length; k++) {
+		arr.push(notCompleteMatches[k]);
+	}
+}
+
+function teamContainsNum(arr, nums) {
+
+}
+
+//TO BE EDITED W HTML?
+function getSearchBar() {
+	return "7128";
+}
+
+function getNumsIn(sBar) {
+	var toReturn = "";
+
+	for(var i = 0; i < sBar.length; i++) {
+		if(isNaN(sBar.charAt(i))) { //not number
+
+			while(i < sBar.length && (isNaN(sBar.charAt(i)) || sBar.charAt(i) == ' ')) {
+				i++;
+			}
+
+			if(i < sBar.length) {
+				toReturn += " ";
+			}
+		}
+
+		if(sBar.charAt(i) != ' ') {
+			toReturn += sBar.charAt(i);
+		}
+	}
+
+	return toReturn;
+}
+
+function hasNumbers(str) {
+	for(var i = 0; i < str.length; i++) {
+		if(!isNaN(str.charAt(i))) {
+			return true;
+		}
+	}
+	return false;
+}*/
+
+//TO BE EDITED W WEBSCRAPE?
+function getTeams() {
+	return [2473, 7128, 7610];
+}
+
+/*function possibleSearchOptions() {
+	var toReturn = [];
+
+	var rankByStat = [];
+	var smartRankByStat = [];
+	for(var i = 0; i < stats.length; i++) {
+		rankByStat.push("rank by " + stats[i]);
+		smartRankByStat.push("smartrank by " + stats[i]);
+	}
+	toReturn.push(rankByStat);
+	toReturn.push(smartRankByStat);
+
+	var teamNum = [];
+	for(var i = 0; i < teams.length; i++) {
+		teamNum.push(teams[i]);
+	}
+	toReturn.push(teamNum);
+
+	var teamStat = [];
+	for(var i = 0; i < teams.length; i++) {
+		for(var j = 0; j < stats.length; j++) {
+			teamStat.push(teams[i] + " " + stats[j]);
+		}
+	}
+	toReturn.push(teamStat);
+	//return ["rank by <stat>", "\"smartrank\" by <stat>", "<team #> <stat>", "<team #>"];
+	return toReturn;
+}*/
+
+// var i = 33;
+// console.log(i);
+// var ask = prompt("how's your day going?");
+// console.log("jo is having a " + ask + "day");
+// alert("memes");
+// var meme = [];
+// meme.push("memes tbh");
+// meme.push(2);
+// console.log(meme);
+// var obj = {
+// 	index1: "1",
+// 	num1: 2
+// };
+// var keys = Object.keys(obj);
+// console.log(keys[1]);
+
+
+</script>
+</body>
+</html>

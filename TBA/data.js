@@ -1,16 +1,22 @@
-function getRequest(request, callback) {
-  var requester = new XMLHttpRequest();
+var baseUrl = "https://www.thebluealliance.com/api/v2/";
 
-  requester.open("GET",request,true);
-  requester.send(null);
-
-  requester.onreadystatechange = function() {
-    if (requester.readyState == 4 && requester.status == 200) {
-       callback(JSON.parse(requester.responseText));
-    }
-  }
+function request(request, callback) {
+  $.ajax({
+      headers: {'X-TBA-App-Id': 'deepsethi2473:frcspn:v1'},
+      url: request,
+      dataType: 'json',
+      cache: true
+  }).done(callback).fail(function(error) {
+  	console.log(error);
+  });
 }
 
-function getTeamData(team_number) {
-  
+function requestTeamsAtTourn(event_key, callback) {
+	request(baseUrl + "event/" + event_key + "/teams",
+		callback);
+}
+
+function requestTeamDataAtTourn(team_key, event_key, callback) {
+	request(baseUrl + "team/" + team_key + "/event/" + event_key + "/matches",
+		callback);
 }
