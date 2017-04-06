@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link type="text/css" rel="stylesheet" href="main.css"/>
-  <link type="text/css" rel="stylesheet" href="display/tourney.css"/>
+  <link type="text/css" rel="stylesheet" href="../main.css"/>
+  <link type="text/css" rel="stylesheet" href="tourney.css"/>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="script.js"></script>
-  <script type="text/javascript" src="search.js"></script>
-  <script type="text/javascript" src="table.js"></script>
-  <script type="text/javascript" src="sort.js"></script>
+  <script type="text/javascript" src="../script.js"></script>
   <title>FRCSPN: Advanced Analysis and Querying for your Blue Alliance Tournament</title>
 </head>
 <body>
-  <div id="background">
-    <p class="uppercase" id="front_header">frcspn</p>
-    <input id="bal"></input>
-    <p id="invite">Enter Blue Alliance Tournament Link</p>
-  </div>
   <div id="tourney_info">
     <div id="top_bar">
       <h2 class="inline uppercase">frcspn</h2>
@@ -27,12 +19,19 @@
       </ul>
     </div>
     <div id="tourney_content">
+      <div id="tab_nav">
+        <div class="tab tab_selected" id="team_tab">Teams</div>
+        <div class="tab tab_notSelected" id="match_tab">Matches</div>
+      </div>
+      <table id="match_table">
+
+      </table>
       <table id="table" border="0">
         <tr id="top_row">
           <td class="content_header">Rank</td>
           <td class="content_header">Team</td>
-          <td class="content_header">Score</td>
-          <td class="content_header">Points</td>
+          <td class="content_header">Ranking Score</td>
+          <td class="content_header">Match Pts</td>
           <td class="content_header">Auto</td>
           <td class="content_header">Rotor</td>
           <td class="content_header">Touchpad</td>
@@ -44,7 +43,7 @@
           <td class="content_header">GP</td>
           <td class="content_header">RP</td>
         </tr>
-        <tr class="not">
+        <tr>
           <td class="content">1</td>
           <td class="content">2473</td>
           <td class="content">1.95</td>
@@ -59,38 +58,6 @@
           <td class="content"> - </td>
           <td class="content">20</td>
           <td class="content">39</td>
-        </tr>
-        <tr class="not">
-          <td class="content">3</td>
-          <td class="content">1002</td>
-          <td class="content">0.21</td>
-          <td class="content">2901</td>
-          <td class="content">921</td>
-          <td class="content">4201</td>
-          <td class="content">900</td>
-          <td class="content">10</td>
-          <td class="content record">6</td>
-          <td class="content record">4</td>
-          <td class="content record">2</td>
-          <td class="content"> - </td>
-          <td class="content">16</td>
-          <td class="content">20</td>
-        </tr>
-        <tr class="not">
-          <td class="content">2</td>
-          <td class="content">481</td>
-          <td class="content">0.95</td>
-          <td class="content">1293</td>
-          <td class="content">7621</td>
-          <td class="content">6812</td>
-          <td class="content">2374</td>
-          <td class="content">10</td>
-          <td class="content record">30</td>
-          <td class="content record">10</td>
-          <td class="content record">5</td>
-          <td class="content"> - </td>
-          <td class="content">10</td>
-          <td class="content">19</td>
         </tr>
       </table>
     </div>

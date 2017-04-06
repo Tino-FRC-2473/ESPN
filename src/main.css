@@ -1,0 +1,54 @@
+@font-face {
+  src: url('../assets/fonts/oswald/Oswald-Medium.ttf');
+  font-family: Oswald;
+}
+#background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url('../assets/img/c o n f e t t i.jpg');
+  background-size: cover;
+  opacity: 0.82;
+}
+#front_header {
+  margin-top: 150px;
+  margin-bottom: 30px;
+  font-size: 144px;
+  text-align: center;
+  font-family: Oswald;
+  color: white;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+#bal {
+  width: 65%;
+  font-size: 35px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  outline: none;
+  border: none;
+  background: rgba(255, 255, 255, 0.8);
+  font-family: Oswald;
+  color: grey;
+  transition: all 0.15s;
+  -webkit-transition: all 0.15s;
+  -o-transition: all 0.15s;
+  -moz-transition: all 0.15s;
+  -ms-transition: all 0.15s;
+}
+#bal:hover {
+  background: rgba(255, 255, 255, 0.88);
+}
+#bal:focus {
+  background: rgba(255, 255, 255, 0.9875);
+}
+#invite {
+  font-size: 24px;
+  color: white;
+  font-family: Oswald;
+}
