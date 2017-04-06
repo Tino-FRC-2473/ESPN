@@ -1,0 +1,169 @@
+#tourney_info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: #C0392B;
+  overflow: scroll;
+  padding-bottom: 10px;
+}
+/*Topbar code*/
+#top_bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 12.5px;
+  background: #F4D03F;
+}
+.inline {
+  display: inline-block;
+}
+#top_bar h2 {
+  color: #4A4A4A;
+  font-family: Oswald;
+  font-size: 36px;
+  margin-left: 40px;
+  transition: all 0.15s;
+  -o-transition: all 0.15s;
+  -ms-transition: all 0.15s;
+  -webkit-transition: all 0.15s;
+  -moz-transition: all 0.15s;
+  cursor: pointer;
+}
+#top_bar h2:hover {
+  color: black;
+}
+#search {
+  outline: none;
+  border: none;
+  border-bottom: 0px solid #4A4A4A;
+  background: transparent;
+  width: 40%;
+  margin-left: 17.5%;
+  font-family: Oswald;
+  font-size: 20px;
+  color: #4A4A4A;
+  padding-bottom: 5px;
+}
+#search:focus {
+  border-bottom: 2.5px solid #4A4A4A;
+}
+#search::-webkit-input-placeholder {
+  color: #4A4A4A;
+  font-style: italic;
+}
+#search::-moz-placeholder {
+  color: #4A4A4A;
+  font-style: italic;
+}
+#search:-moz-placeholder {
+  color: #4A4A4A;
+  font-style: italic;
+}
+#search::-ms-input-placeholder {
+  color: #4A4A4A;
+  font-style: italic;
+}
+.inline li {
+  color: #4A4A4A;
+  display: inline-block;
+  margin-right: 15px;
+  text-align: right;
+  font-family: Oswald;
+  font-size: 20px;
+  transition: all 0.15s;
+  -o-transition: all 0.15s;
+  -ms-transition: all 0.15s;
+  -webkit-transition: all 0.15s;
+  -moz-transition: all 0.15s;
+  cursor: pointer;
+}
+.inline li:hover {
+  color: black;
+}
+/*Table Code*/
+#table {
+  max-width: 10000px;
+  max-height: 360px;
+  margin-top: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #FFFFFF;
+  bottom: 10px;
+  border-collapse: collapse;
+  font-family: Oswald;
+  font-size: 18px;
+}
+.content_header {
+  background: #6C7A89;
+  color: white;
+}
+#table td {
+  padding: 10px;
+  text-align: center;
+}
+.content {
+  color: #95A5A6;
+}
+#asterisk {
+  position: absolute;
+  bottom: 30px;
+  left: 60px;
+  font-family: Oswald;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+.view_option {
+  position: fixed;
+  left: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100px;
+  text-align: center;
+  background: #4A4A4A;
+  font-family: Oswald;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+#rank_option {
+  top: 40%;
+}
+#info_option {
+  top: 50%;
+}
+#bracket_option {
+  top: 60%;
+}
+#tab_nav {
+  position: absolute;
+  width: 100%;
+}
+.tab {
+  display: inline-block;
+  position: fixed;
+  width: 50%;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family: Oswald;
+  color: white;
+}
+#team_tab {
+  left: 0;
+}
+#match_tab {
+  right: 0;
+}
+.tab:hover {
+  background: #C0392B;
+}
+.tab_selected {
+  background: #C0392B;
+}
+.tab_notSelected {
+  background: maroon;
+}
