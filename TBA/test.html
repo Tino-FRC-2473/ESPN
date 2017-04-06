@@ -104,7 +104,15 @@
 
 			teamSummary.data = [];
 
-			requestStatsAtTourn(eventId, print);
+// JOJO START LOOKING HERE
+			requestStatsAtTourn(eventId, store); //request data and run store method on data
+			var requested_stats = getData(); //store data in variable, for demonstration
+			print(requested_stats); //print value of variable storing data
+
+			requestRankingsAtTourn(eventId, store);
+			var requested_rankings = getData();
+			print(requested_rankings);
+
 			requestRankingsAtTourn(eventId, print);
 
 			console.log(teamSummary);
@@ -143,7 +151,7 @@
 											? "L"
 											: "T";
 			toReturn.score = obj.alliances[side].score;
-			
+
 			toReturn.scores = {};
 				toReturn.scores.kpa = obj.score_breakdown[side].autoFuelPoints + obj.score_breakdown[side].teleopFuelPoints;
 				toReturn.scores.kpas = {};
@@ -172,11 +180,21 @@
 		function print(param) {
 			console.log(param);
 		}
+
+		function store(param) {
+			$('#data-storage').data(param);
+		}
+
+		function getData() {
+			var returner = $('p').data(); //store current data
+			$('#data-storage').data(undefined); //clear data
+			return returner; //return variable with value
+		}
 	</script>
 </head>
 
 <body>
-
+<p id="data-storage" style="display: none;"></p>
 
 </body>
 
