@@ -20,3 +20,13 @@ function requestTeamDataAtTourn(team_key, event_key, callback) {
 	request(baseUrl + "team/" + team_key + "/event/" + event_key + "/matches",
 		callback);
 }
+
+function requestStatsAtTourn(event_key, callback) {
+	request(baseUrl + "event/" + event_key + "/stats",
+		callback);
+}
+
+function requestRankingsAtTourn(event_key, callback) {
+	request(baseUrl + "event/" + event_key + "/rankings",
+		callback);
+}

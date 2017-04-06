@@ -12,7 +12,7 @@
 		var teamId = "frc2473";
 
 		requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
-		requestTeamsAtTourn(eventId, handleTeams);
+		//requestTeamsAtTourn(eventId, handleTeams);
 
 		function handleTeams(arr) {
 			var teams = [];
@@ -21,12 +21,10 @@
 				teams.push(arr[i].team_number);
 			}
 
-			console.log(teams);
 			step1(teams);
 		}
 
 		function handleTeamMatchData(arr) {
-			console.log(arr);	
 			var qmMatches = [];
 			for(var i = 0; i < arr.length; i++) {
 				var match = arr[i];
@@ -86,7 +84,41 @@
 			}
 
 			console.log(matches);
+			teamDataStep1(matches);
 		}
+
+		function teamDataStep1(matches) {
+			var teamSummary = {};
+			teamSummary.numFourRotors = 0;
+			teamSummary.numKpaReached = 0;
+			teamSummary.numMatches = matches.length;
+
+			for(var i = 0; i < matches.length; i++) {
+				if(matches[i].numRotors == 4) {
+					teamSummary.numFourRotors++;
+				}
+				if(matches[i].scores.kpa >= 40) {
+					teamSummary.numKpaReached++;
+				}
+			}
+
+			teamSummary.data = [];
+
+			requestStatsAtTourn(eventId, print);
+			requestRankingsAtTourn(eventId, print);
+
+			console.log(teamSummary);
+		}
+
+		//function teamDataStep2(summary)
+		/*deepu
+		 *what i did was get matches then put in in "matches" arr
+		 *this arr is finished
+		 *started teamSummary obj
+		 *got some data from matches
+		 *want to pass matches along while continuing to update teamSummary from rankings table
+		 */
+
 
 		function parseMatchData(obj, team) {
 			var toReturn = {};
@@ -105,15 +137,18 @@
 
 
 			toReturn.match_number = obj.match_number;
-			toReturn.result = (toReturn.score > obj.alliances[oSide].score)
+			toReturn.result = (obj.alliances[side].score > obj.alliances[oSide].score)
 									? "W"
-									: (toReturn.score < obj.alliances[oSide].score)
+									: (obj.alliances[side].score < obj.alliances[oSide].score)
 											? "L"
 											: "T";
 			toReturn.score = obj.alliances[side].score;
 			
 			toReturn.scores = {};
 				toReturn.scores.kpa = obj.score_breakdown[side].autoFuelPoints + obj.score_breakdown[side].teleopFuelPoints;
+				toReturn.scores.kpas = {};
+					toReturn.scores.kpas.auto = obj.score_breakdown[side].autoFuelPoints;
+					toReturn.scores.kpas.teleop = obj.score_breakdown[side].teleopFuelPoints;
 				toReturn.scores.touchpad = obj.score_breakdown[side].teleopTakeoffPoints;
 				toReturn.scores.rotor = obj.score_breakdown[side].autoRotorPoints + obj.score_breakdown[side].teleopRotorPoints;
 				toReturn.scores.rotors = {};
@@ -122,6 +157,7 @@
 				toReturn.scores.mobility = ((obj.score_breakdown[side].robot1Auto == "Mobility")?5:0) +
 										((obj.score_breakdown[side].robot2Auto == "Mobility")?5:0) +
 										((obj.score_breakdown[side].robot3Auto == "Mobility")?5:0);
+				toReturn.scores.bonuses = obj.score_breakdown[side].rotorBonusPoints + obj.score_breakdown[side].kPaBonusPoints;
 				toReturn.scores.fouls = obj.score_breakdown[side].foulPoints;
 				toReturn.scores.adjustments = obj.score_breakdown[side].adjustPoints;
 			toReturn.numRotors = obj.score_breakdown[side].rotor1Engaged + obj.score_breakdown[side].rotor2Engaged + obj.score_breakdown[side].rotor3Engaged + obj.score_breakdown[side].rotor4Engaged;
