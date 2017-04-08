@@ -5,13 +5,29 @@
 <head>
 	<title>2473 Scouting Test</title>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="data.js"></script>
+	<script type="text/javascript" src="requester.js"></script>
+	<script type="text/javascript" src="database.js"></script>
+	<script type="text/javascript" src="parser.js"></script>
 	<script>
 
-		var eventId = "2017casj"
-		var teamId = "frc2473";
+		$(document).ready(function() {
+			updateData();
+			setInterval(updateData, 30000);
+		});
 
-		requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
+		//to be html'd
+		function updateLoader() {
+			if(completeRequest()) {
+				$('#loader').text("Loading Complete!");
+			} else {
+				$('#loader').text("Loading...");				
+			}
+		}
+
+		function completeRequest() {
+			return getMatches() != [] && getStats() != {} && getRankings() != [];
+		}
+		/*requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
 		//requestTeamsAtTourn(eventId, handleTeams);
 
 		function handleTeams(arr) {
@@ -20,161 +36,6 @@
 			for(var i = 0; i < arr.length; i++) {
 				teams.push(arr[i].team_number);
 			}
-
-			step1(teams);
-		}
-
-		function handleTeamMatchData(arr) {
-			var qmMatches = [];
-			for(var i = 0; i < arr.length; i++) {
-				var match = arr[i];
-				if(match.comp_level == "qm") {
-					qmMatches.push(parseMatchData(match, teamId));
-				}
-			}
-			qmMatches.sort(function compare(a, b) {
-				return a.match_number - b.match_number;
-			});
-
-			var qfMatches = [];
-			for(var i = 0; i < arr.length; i++) {
-				var match = arr[i];
-				if(match.comp_level == "qf") {
-					qfMatches.push(parseMatchData(match, teamId));
-				}
-			}
-			qfMatches.sort(function compare(a, b) {
-				return a.match_number - b.match_number;
-			});
-
-			var sfMatches = [];
-			for(var i = 0; i < arr.length; i++) {
-				var match = arr[i];
-				if(match.comp_level == "sf") {
-					sfMatches.push(parseMatchData(match, teamId));
-				}
-			}
-			sfMatches.sort(function compare(a, b) {
-				return a.match_number - b.match_number;
-			});
-
-			var fMatches = [];
-			for(var i = 0; i < arr.length; i++) {
-				var match = arr[i];
-				if(match.comp_level == "f") {
-					fMatches.push(parseMatchData(match, teamId));
-				}
-			}
-			fMatches.sort(function compare(a, b) {
-				return a.match_number - b.match_number;
-			});
-
-			var matches = [];
-			while(qmMatches.length > 0) {
-				matches.push(qmMatches.shift());
-			}
-			while(qfMatches.length > 0) {
-				matches.push(qfMatches.shift());
-			}
-			while(sfMatches.length > 0) {
-				matches.push(sfMatches.shift());
-			}
-			while(fMatches.length > 0) {
-				matches.push(fMatches.shift());
-			}
-
-			console.log(matches);
-			teamDataStep1(matches);
-		}
-
-		function teamDataStep1(matches) {
-			var teamSummary = {};
-			teamSummary.numFourRotors = 0;
-			teamSummary.numKpaReached = 0;
-			teamSummary.numMatches = matches.length;
-
-			for(var i = 0; i < matches.length; i++) {
-				if(matches[i].numRotors == 4) {
-					teamSummary.numFourRotors++;
-				}
-				if(matches[i].scores.kpa >= 40) {
-					teamSummary.numKpaReached++;
-				}
-			}
-
-			teamSummary.data = [];
-
-// JOJO START LOOKING HERE
-			requestStatsAtTourn(eventId, store); //request data and run store method on data
-			var requested_stats = getData(); //store data in variable, for demonstration
-			print(requested_stats); //print value of variable storing data
-
-			requestRankingsAtTourn(eventId, store);
-			var requested_rankings = getData();
-			print(requested_rankings);
-
-			requestRankingsAtTourn(eventId, print);
-
-			console.log(teamSummary);
-		}
-
-		//function teamDataStep2(summary)
-		/*deepu
-		 *what i did was get matches then put in in "matches" arr
-		 *this arr is finished
-		 *started teamSummary obj
-		 *got some data from matches
-		 *want to pass matches along while continuing to update teamSummary from rankings table
-		 */
-
-
-		function parseMatchData(obj, team) {
-			var toReturn = {};
-
-			var side;
-			var oSide;
-			for(var i = 0; i < 3; i++) {
-				if(team == obj.alliances.blue.teams[i]) {
-					side = "blue";
-					oSide = "red";
-				} else if(team == obj.alliances.red.teams[i]) {
-					side = "red";
-					oSide = "blue";
-				}
-			}
-
-
-			toReturn.match_number = obj.match_number;
-			toReturn.result = (obj.alliances[side].score > obj.alliances[oSide].score)
-									? "W"
-									: (obj.alliances[side].score < obj.alliances[oSide].score)
-											? "L"
-											: "T";
-			toReturn.score = obj.alliances[side].score;
-
-			toReturn.scores = {};
-				toReturn.scores.kpa = obj.score_breakdown[side].autoFuelPoints + obj.score_breakdown[side].teleopFuelPoints;
-				toReturn.scores.kpas = {};
-					toReturn.scores.kpas.auto = obj.score_breakdown[side].autoFuelPoints;
-					toReturn.scores.kpas.teleop = obj.score_breakdown[side].teleopFuelPoints;
-				toReturn.scores.touchpad = obj.score_breakdown[side].teleopTakeoffPoints;
-				toReturn.scores.rotor = obj.score_breakdown[side].autoRotorPoints + obj.score_breakdown[side].teleopRotorPoints;
-				toReturn.scores.rotors = {};
-					toReturn.scores.rotors.teleop = obj.score_breakdown[side].teleopRotorPoints;
-					toReturn.scores.rotors.auto = obj.score_breakdown[side].autoRotorPoints;
-				toReturn.scores.mobility = ((obj.score_breakdown[side].robot1Auto == "Mobility")?5:0) +
-										((obj.score_breakdown[side].robot2Auto == "Mobility")?5:0) +
-										((obj.score_breakdown[side].robot3Auto == "Mobility")?5:0);
-				toReturn.scores.bonuses = obj.score_breakdown[side].rotorBonusPoints + obj.score_breakdown[side].kPaBonusPoints;
-				toReturn.scores.fouls = obj.score_breakdown[side].foulPoints;
-				toReturn.scores.adjustments = obj.score_breakdown[side].adjustPoints;
-			toReturn.numRotors = obj.score_breakdown[side].rotor1Engaged + obj.score_breakdown[side].rotor2Engaged + obj.score_breakdown[side].rotor3Engaged + obj.score_breakdown[side].rotor4Engaged;
-
-			return toReturn;
-		}
-
-		function step1(teams) {
-
 		}
 
 		function print(param) {
@@ -186,16 +47,17 @@
 		}
 
 		function getData() {
-			var returner = $('p').data(); //store current data
+			var returner = $('#data-storage').data(); //store current data
 			$('#data-storage').data(undefined); //clear data
+			console.log(returner);
 			return returner; //return variable with value
-		}
+		}*/
 	</script>
 </head>
 
 <body>
 <p id="data-storage" style="display: none;"></p>
-
+<p id="loader">Loading</p>
 </body>
 
 </html>
