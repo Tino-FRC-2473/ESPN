@@ -7,7 +7,7 @@ var rankings = [];
 var teams = [];
 var event = {};
 
-var eventKey = "2017casj";
+var defaultKey = "2017casj";
 
 function getMatches() {
   return matches;
@@ -42,7 +42,14 @@ function setRankings(rankingData) {
 }
 
 function getEventKey() {
-	return eventKey;
+	if(getEvent().key == null) {
+		console.log("default");
+		console.log(event);
+		return defaultKey;
+	} else {
+		console.log(".");
+		return event.key;
+	}
 }
 
 //TODO: deep
@@ -54,6 +61,8 @@ function setEventKey(key) {
 }
 
 function setEvent(eventData) {
+	console.log("event set");
+	console.log(eventData);
 	event = eventData;
 }
 

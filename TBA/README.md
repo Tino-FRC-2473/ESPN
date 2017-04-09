@@ -1,5 +1,5 @@
 # FRCSPN
-This tool...
+This tool was made to compile data to effectively scout for FRC matches
 
 ## How to use FRCSPN
 Self-explanatory?

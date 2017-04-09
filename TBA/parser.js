@@ -18,95 +18,91 @@ function getTeamData(team_num) {
 		return a.time - b.time;
 	});
 
+	data.numFourRotors = 0;
+	data.numKpaReached = 0;
+	data.numMatches = 0;
+
+	for(var i = 0; i < data.matches.length; i++) {
+		var side;
+		//var oSide;
+		for(var j = 0; j < 3; j++) {
+			if(key == data.matches[i].alliances.blue.teams[j]) {
+				side = "blue";
+				//oSide = "red";
+			} else if(key == data.matches[i].alliances.red.teams[j]) {
+				side = "red";
+				//oSide = "blue";
+			}
+		}
+
+		if(data.matches[i].score_breakdown != null) {
+			data.numMatches++;
+			if(data.matches[i].score_breakdown[side].rotor4Engaged) {
+				data.numFourRotors++;
+			}
+			if(data.matches[i].score_breakdown[side].autoFuelPoints + data.matches[i].score_breakdown[side].teleopFuelPoints >= 40) {
+				data.numKpaReached++;
+			}
+		}
+
+	}
+
+
+	var stats = getStats();
+	data.stats = {};
+	data.stats.opr = stats.oprs[team_num];
+	data.stats.ccwm = stats.ccwms[team_num];
+	data.stats.dpr = stats.dprs[team_num];
+
+
+	var rankings = getRankings();
+	data.rank = getPlaceForTeamIn2DArrSortedByCol(rankings, 0, team_num, false);
+
+	data.placings = {};
+	data.scores = {};
+
+	data.placings.matchPoints = getPlaceForTeamIn2DArrSortedByCol(rankings, 3, team_num, true);
+	data.scores.matchPoints = rankings[data.placings.matchPoints-1][3];
+
+	data.placings.auto = getPlaceForTeamIn2DArrSortedByCol(rankings, 4, team_num, true);
+	data.scores.auto = rankings[data.placings.auto-1][4];
+
+	data.placings.rotor = getPlaceForTeamIn2DArrSortedByCol(rankings, 5, team_num, true);
+	data.scores.rotor = rankings[data.placings.rotor-1][5];
+
+	data.placings.touchpad = getPlaceForTeamIn2DArrSortedByCol(rankings, 6, team_num, true);
+	data.scores.touchpad = rankings[data.placings.touchpad-1][6];
+
+	data.placings.pressure = getPlaceForTeamIn2DArrSortedByCol(rankings, 7, team_num, true);
+	data.scores.pressure = rankings[data.placings.pressure-1][7];
+
+	// rankings.sort(function compare(a, b) {
+	// 	return b[3] - a[3];
+	// });
+	// idx = 1;
+	// while(rankings[idx-1][1] != team_num) { idx++; }
+	// data.placings.match = idx;
+	
+	// rankings.sort(function compare(a, b) {
+	//  	return b[4] - a[4];
+	// });
+	// idx = 1;
+	// while(rankings[idx-1][1] != team_num) { idx++; }
+	// data.placings.auto = idx;
+
 	return data;
 }
 
-function handleTeamMatchData(arr) {
+function getPlaceForTeamIn2DArrSortedByCol(arr2D, col, team_num, descending) {
+	arr2D.sort(function compare(a, b) {
+		if(b[col] != a[col]) {
+	 		return ((descending)?1:-1) * (b[col] - a[col]);
+	 	} else {
+	 		return b[3] - a[3];
+	 	}
+	});
+	var idx = 1;
+	while(rankings[idx-1][1] != team_num) { idx++; }
 
-	console.log(matches);
-	teamDataStep1(matches);
+	return idx;
 }
-
-function teamDataStep1(matches) {
-	var teamSummary = {};
-	teamSummary.numFourRotors = 0;
-	teamSummary.numKpaReached = 0;
-	teamSummary.numMatches = matches.length;
-
-	for(var i = 0; i < matches.length; i++) {
-		if(matches[i].numRotors == 4) {
-			teamSummary.numFourRotors++;
-		}
-		if(matches[i].scores.kpa >= 40) {
-			teamSummary.numKpaReached++;
-		}
-	}
-
-	teamSummary.data = [];
-
-			requestStatsAtTourn(eventId, store); //request data and run store method on data
-			var r1 = getData();
-			console.log("r1");
-			console.log(r1);
-
-			requestRankingsAtTourn(eventId, store);
-			var r2 = getData();
-			console.log("r2");
-			console.log(r2);
-
-			requestTeamsAtTourn(eventId, store);
-			var r3 = getData();
-			console.log("r3");
-			console.log(r3);
-
-			console.log("teamSummary");
-			console.log(teamSummary);
-		}
-
-		function parseMatchData(obj, team) {
-			var toReturn = {};
-
-			var side;
-			var oSide;
-			for(var i = 0; i < 3; i++) {
-				if(team == obj.alliances.blue.teams[i]) {
-					side = "blue";
-					oSide = "red";
-				} else if(team == obj.alliances.red.teams[i]) {
-					side = "red";
-					oSide = "blue";
-				}
-			}
-
-
-			toReturn.match_number = obj.match_number;
-			toReturn.result = (obj.alliances[side].score > obj.alliances[oSide].score)
-			? "W"
-			: (obj.alliances[side].score < obj.alliances[oSide].score)
-			? "L"
-			: "T";
-			toReturn.score = obj.alliances[side].score;
-
-			toReturn.scores = {};
-				toReturn.scores.kpaAuto = obj.score_breakdown[side].autoFuelPoints;
-				toReturn.scores.kpaTeleop = obj.score_breakdown[side].teleopFuelPoints;
-				toReturn.scores.kpaTotal = toReturn.scores.kpaAuto + toReturn.scores.kpaTeleop;
-
-				toReturn.scores.touchpad = obj.score_breakdown[side].teleopTakeoffPoints;
-
-				toReturn.scores.rotorAuto = obj.score_breakdown[side].autoRotorPoints;
-				toReturn.scores.rotorTeleop = obj.score_breakdown[side].teleopRotorPoints;
-				toReturn.scores.rotorTotal = toReturn.scores.rotorAuto + toReturn.scores.rotorTeleop;
-
-				toReturn.scores.mobility = ((obj.score_breakdown[side].robot1Auto == "Mobility")?5:0)+
-											((obj.score_breakdown[side].robot2Auto == "Mobility")?5:0)+
-											((obj.score_breakdown[side].robot3Auto == "Mobility")?5:0);
-
-				toReturn.scores.bonuses = obj.score_breakdown[side].rotorBonusPoints + obj.score_breakdown[side].kPaBonusPoints;
-				toReturn.scores.fouls = obj.score_breakdown[side].foulPoints;
-				toReturn.scores.adjustments = obj.score_breakdown[side].adjustPoints;
-			
-			toReturn.numRotors = obj.score_breakdown[side].rotor1Engaged + obj.score_breakdown[side].rotor2Engaged + obj.score_breakdown[side].rotor3Engaged + obj.score_breakdown[side].rotor4Engaged;
-
-			return toReturn;
-		}

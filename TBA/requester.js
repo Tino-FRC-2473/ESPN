@@ -49,15 +49,22 @@ function updateData() {
 	requestRankingsAtEvent(getEventKey(), updateRankings);
 	requestStatsAtEvent(getEventKey(), updateStats);
 
-	var n = 2473;
-	console.log(n + " team data");
-	console.log(getTeamData(n));
-	console.log("");
+	//below portion of code BESIDES UPDATELOADER IS FOR TESTING
+	//without timeouts, returns error stopping entire code due to the stats part of getTeamData and undef
+	//in actual code this will be called after search, after the initialUpdateData, making it not matter
+	setTimeout(function(){
+	    var n = 2473;
+		console.log(n + " data for " + getEventKey());
+		console.log(getTeamData(n));
+		console.log("");
+	}, 1750);
+	
+	//IMPORTANT DONT DELETE
 	updateLoader();
 }
 
 function updateMatches(data) {
-	setMatches(data);
+	setMatches(parseMatches(data));
 	console.log("matches");
 	console.log(getMatches());
 	console.log("");
@@ -65,6 +72,7 @@ function updateMatches(data) {
 
 //TODO: deep
 //rankings came w the header which was a pain to deal w to sort, so i just took it out
+//might need it for headers
 //delete this comment or msg me after you see it
 function updateRankings(data) {
 	var header = data.shift();
@@ -93,4 +101,16 @@ function updateEvent(data) {
 	console.log("event");
 	console.log(getEvent());
 	console.log("");
+}
+
+//CARE: deleted some match data
+function parseMatches(matches) {
+	for(var i = 0; i < matches.length; i++) {
+		delete matches[i].event_key;
+		delete matches[i].key;
+		delete matches[i].videos;
+		delete matches[i].time_string;
+		delete matches[i].set_number;
+	}
+	return matches;
 }
