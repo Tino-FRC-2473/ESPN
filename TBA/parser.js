@@ -4,8 +4,6 @@ function getTeamData(team_num) {
 	data.matches = [];
 
 	var allMatches = getMatches();
-	
-
 	for(var i = 0; i < allMatches.length; i++) {
 		var m = allMatches[i];
 		for(var j = 0; j < 3; j++) {
