@@ -1,9 +1,13 @@
+//updated upon refresh
 var matches = [];
-var teams = [];
 var stats = {};
 var rankings = [];
 
-var eventKey = "2017cajs";
+//updated at start
+var teams = [];
+var event = {};
+
+var eventKey = "2017casj";
 
 function getMatches() {
   return matches;
@@ -41,6 +45,18 @@ function getEventKey() {
 	return eventKey;
 }
 
+//TODO: deep
+//if change event, update immediately
+//am i right? or wrong?
 function setEventKey(key) {
 	eventKey = key;
+	initialUpdateData();
+}
+
+function setEvent(eventData) {
+	event = eventData;
+}
+
+function getEvent() {
+	return event;
 }

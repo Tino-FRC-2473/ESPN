@@ -11,22 +11,23 @@
 	<script>
 
 		$(document).ready(function() {
-			updateData();
+			initialUpdateData();
 			setInterval(updateData, 30000);
 		});
 
-		//to be html'd
+		//TODO: deep
 		function updateLoader() {
-			if(completeRequest()) {
+			if(requestComplete()) {
 				$('#loader').text("Loading Complete!");
 			} else {
 				$('#loader').text("Loading...");				
 			}
 		}
 
-		function completeRequest() {
+		function requestComplete() {
 			return getMatches() != [] && getStats() != {} && getRankings() != [];
 		}
+
 		/*requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
 		//requestTeamsAtTourn(eventId, handleTeams);
 
@@ -36,22 +37,8 @@
 			for(var i = 0; i < arr.length; i++) {
 				teams.push(arr[i].team_number);
 			}
-		}
-
-		function print(param) {
-			console.log(param);
-		}
-
-		function store(param) {
-			$('#data-storage').data(param);
-		}
-
-		function getData() {
-			var returner = $('#data-storage').data(); //store current data
-			$('#data-storage').data(undefined); //clear data
-			console.log(returner);
-			return returner; //return variable with value
 		}*/
+
 	</script>
 </head>
 

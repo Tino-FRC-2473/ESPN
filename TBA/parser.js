@@ -1,23 +1,26 @@
 function getTeamData(team_num) {
 	var key = "frc"+team_num;
+	var data = {};
+	data.matches = [];
+
 	var allMatches = getMatches();
-	var matches = [];
+	
 
 	for(var i = 0; i < allMatches.length; i++) {
 		var m = allMatches[i];
 		for(var j = 0; j < 3; j++) {
 			if(m.alliances.blue.teams[j] == key || m.alliances.red.teams[j] == key) {
-				matches.push(m);
+				data.matches.push(m);
 				break;
 			}
 		}
 	}
 
-	matches.sort(function compare(a, b) {
+	data.matches.sort(function compare(a, b) {
 		return a.time - b.time;
 	});
 
-	return matches;
+	return data;
 }
 
 function handleTeamMatchData(arr) {

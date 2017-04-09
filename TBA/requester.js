@@ -12,36 +12,42 @@ function request(request, callback) {
 }
 
 
-/*function requestTeamsAtTourn(event_key, callback) {
-	request(baseUrl + "event/" + event_key + "/teams",
-		callback);
-}
-
-function requestTeamDataAtTourn(team_key, event_key, callback) {
-	request(baseUrl + "team/" + team_key + "/event/" + event_key + "/matches",
-		callback);
-}*/
-
-function requestMatchesAtTourn(event_key, callback) {
+function requestMatchesAtEvent(event_key, callback) {
 	request(baseUrl + "event/" + event_key + "/matches",
 		callback);
 }
 
-function requestRankingsAtTourn(event_key, callback) {
+function requestRankingsAtEvent(event_key, callback) {
 	request(baseUrl + "event/" + event_key + "/rankings",
 		callback);
 }
 
-function requestStatsAtTourn(event_key, callback) {
+function requestStatsAtEvent(event_key, callback) {
 	request(baseUrl + "event/" + event_key + "/stats",
 		callback);
 }
 
+function requestTeamsAtEvent(event_key, callback) {
+	request(baseUrl + "event/" + event_key + "/teams",
+		callback);
+}
+
+function requestEvent(event_key, callback) {
+	request(baseUrl + "event/" + event_key,
+		callback);
+}
+
+function initialUpdateData() {
+	updateData();
+	requestTeamsAtEvent(getEventKey(), updateTeams);
+	requestEvent(getEventKey(), updateEvent);
+}
+
 function updateData() {
 	console.log("");
-	requestMatchesAtTourn(getEventKey(), updateMatches);
-	requestRankingsAtTourn(getEventKey(), updateRankings);
-	requestStatsAtTourn(getEventKey(), updateStats);
+	requestMatchesAtEvent(getEventKey(), updateMatches);
+	requestRankingsAtEvent(getEventKey(), updateRankings);
+	requestStatsAtEvent(getEventKey(), updateStats);
 
 	var n = 2473;
 	console.log(n + " team data");
@@ -57,7 +63,11 @@ function updateMatches(data) {
 	console.log("");
 }
 
+//TODO: deep
+//rankings came w the header which was a pain to deal w to sort, so i just took it out
+//delete this comment or msg me after you see it
 function updateRankings(data) {
+	var header = data.shift();
 	setRankings(data);
 	console.log("rankings");
 	console.log(getRankings());
@@ -68,5 +78,19 @@ function updateStats(data) {
 	setStats(data);
 	console.log("stats");
 	console.log(getStats());
+	console.log("");
+}
+
+function updateTeams(data) {
+	setTeams(data);
+	console.log("teams");
+	console.log(getTeams());
+	console.log("");
+}
+
+function updateEvent(data) {
+	setEvent(data);
+	console.log("event");
+	console.log(getEvent());
 	console.log("");
 }
