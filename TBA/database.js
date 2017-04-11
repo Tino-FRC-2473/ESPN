@@ -6,8 +6,9 @@ var rankings = [];
 //updated at start
 var teams = [];
 var event = {};
+event.key = "2017casj";
 
-var defaultKey = "2017casj";
+//var defaultKey = "2017casj";
 
 function getMatches() {
   return matches;
@@ -41,31 +42,21 @@ function setRankings(rankingData) {
   rankings = rankingData;
 }
 
-function getEventKey() {
-	if(getEvent().key == null) {
-		console.log("default");
-		console.log(event);
-		return defaultKey;
-	} else {
-		console.log(".");
-		return event.key;
-	}
-}
-
 //TODO: deep
 //if change event, update immediately
 //am i right? or wrong?
-function setEventKey(key) {
-	eventKey = key;
+function userEventChange(key) {
+	console.log("USER EVENT_KEY CHANGE TO " + key);
+	event.key = key;
 	initialUpdateData();
 }
 
 function setEvent(eventData) {
-	console.log("event set");
-	console.log(eventData);
 	event = eventData;
 }
 
 function getEvent() {
+	// console.log("get event");
+	// console.log(event);
 	return event;
 }

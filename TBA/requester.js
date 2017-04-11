@@ -39,25 +39,30 @@ function requestEvent(event_key, callback) {
 
 function initialUpdateData() {
 	updateData();
-	requestTeamsAtEvent(getEventKey(), updateTeams);
-	requestEvent(getEventKey(), updateEvent);
+	requestTeamsAtEvent(getEvent().key, updateTeams);
+	requestEvent(getEvent().key, updateEvent);
+	
 }
 
 function updateData() {
 	console.log("");
-	requestMatchesAtEvent(getEventKey(), updateMatches);
-	requestRankingsAtEvent(getEventKey(), updateRankings);
-	requestStatsAtEvent(getEventKey(), updateStats);
+	requestMatchesAtEvent(getEvent().key, updateMatches);
+	requestRankingsAtEvent(getEvent().key, updateRankings);
+	requestStatsAtEvent(getEvent().key, updateStats);
 
 	//below portion of code BESIDES UPDATELOADER IS FOR TESTING
 	//without timeouts, returns error stopping entire code due to the stats part of getTeamData and undef
 	//in actual code this will be called after search, after the initialUpdateData, making it not matter
 	setTimeout(function(){
 	    var n = 2473;
-		console.log(n + " data for " + getEventKey());
+		console.log(n + " data for " + getEvent().key);
 		console.log(getTeamData(n));
 		console.log("");
 	}, 1750);
+
+	setTimeout(function(){
+	    userEventChange("2017cada");
+	}, 7500);
 	
 	//IMPORTANT DONT DELETE
 	updateLoader();
