@@ -41,7 +41,6 @@ function initialUpdateData() {
 	updateData();
 	requestTeamsAtEvent(getEvent().key, updateTeams);
 	requestEvent(getEvent().key, updateEvent);
-	
 }
 
 function updateData() {
@@ -53,16 +52,16 @@ function updateData() {
 	//below portion of code BESIDES UPDATELOADER IS FOR TESTING
 	//without timeouts, returns error stopping entire code due to the stats part of getTeamData and undef
 	//in actual code this will be called after search, after the initialUpdateData, making it not matter
-	setTimeout(function(){
-	    var n = 2473;
-		console.log(n + " data for " + getEvent().key);
-		console.log(getTeamData(n));
-		console.log("");
-	}, 1750);
+	// setTimeout(function(){
+	//     var n = 1986;
+	// 	console.log(n + " data for " + getEvent().key);
+	// 	console.log(getTeamData(n));
+	// 	console.log("");
+	// }, 2500);
 
-	setTimeout(function(){
-	    userEventChange("2017cada");
-	}, 7500);
+	// setTimeout(function(){
+	//     userEventChange("2017cada");
+	// }, 7500);
 	
 	//IMPORTANT DONT DELETE
 	updateLoader();
@@ -112,7 +111,6 @@ function updateEvent(data) {
 function parseMatches(matches) {
 	for(var i = 0; i < matches.length; i++) {
 		delete matches[i].event_key;
-		delete matches[i].key;
 		delete matches[i].videos;
 		delete matches[i].time_string;
 		delete matches[i].set_number;

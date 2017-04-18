@@ -76,20 +76,6 @@ function getTeamData(team_num) {
 	data.placings.pressure = getPlaceForTeamIn2DArrSortedByCol(rankings, 7, team_num, true);
 	data.scores.pressure = rankings[data.placings.pressure-1][7];
 
-	// rankings.sort(function compare(a, b) {
-	// 	return b[3] - a[3];
-	// });
-	// idx = 1;
-	// while(rankings[idx-1][1] != team_num) { idx++; }
-	// data.placings.match = idx;
-	
-	// rankings.sort(function compare(a, b) {
-	//  	return b[4] - a[4];
-	// });
-	// idx = 1;
-	// while(rankings[idx-1][1] != team_num) { idx++; }
-	// data.placings.auto = idx;
-
 	return data;
 }
 

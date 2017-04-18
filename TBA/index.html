@@ -11,6 +11,7 @@
 	<script>
 
 		$(document).ready(function() {
+			// alwaysRefreshPage();
 			initialUpdateData();
 			setInterval(updateData, 30000);
 		});
@@ -28,17 +29,11 @@
 			return getMatches() != [] && getStats() != {} && getRankings() != [];
 		}
 
-		/*requestTeamDataAtTourn(teamId, eventId, handleTeamMatchData);
-		//requestTeamsAtTourn(eventId, handleTeams);
-
-		function handleTeams(arr) {
-			var teams = [];
-
-			for(var i = 0; i < arr.length; i++) {
-				teams.push(arr[i].team_number);
-			}
-		}*/
-
+		// function alwaysRefreshPage() { //REQUIRED FUNCTION
+		// 	$('a').click(function() {
+		// 		window.location.reload();
+		// 	});
+		// }
 
 	</script>
 </head>
@@ -46,6 +41,7 @@
 <body>
 <p id="data-storage" style="display: none;"></p>
 <p id="loader">Loading</p>
+<a href="index.html">Click here for new destination</a>
 </body>
 
 </html>

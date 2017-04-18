@@ -6,9 +6,8 @@ var rankings = [];
 //updated at start
 var teams = [];
 var event = {};
-event.key = "2017casj";
-
-//var defaultKey = "2017casj";
+//default starting key
+event.key = "2017wila";
 
 function getMatches() {
   return matches;
